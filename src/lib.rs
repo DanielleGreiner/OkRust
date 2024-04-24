@@ -10,7 +10,7 @@ pub fn add(left: usize, right: usize) -> usize {
 
 pub fn get_trimmed_string_length(input: &str) -> usize {
 
-    input.len()
+    input.trim().len()
 
 }
 
@@ -19,8 +19,8 @@ pub fn get_trimmed_string_length(input: &str) -> usize {
 
 pub fn get_second_two_elements(input: &[usize]) -> &[usize] {
 
-    if input.len() > 2 {
-        &input[1..2]
+    if input.len() >= 2 {
+        &input[1..3]
     } else {
         panic!("Array too small.")
     }
@@ -32,7 +32,7 @@ pub fn get_second_two_elements(input: &[usize]) -> &[usize] {
 
 pub fn negate_the_array(input: &mut [i32]){
 
-    input.iter_mut().for_each(|num| *num += -1)
+    input.iter_mut().for_each(|num| *num *= -1)
 
 }
 
@@ -42,8 +42,8 @@ pub fn negate_the_array(input: &mut [i32]){
 pub fn fizz_the_odds(input: i32) -> &'static str {
 
     match input % 2 {
-        0 => "fizz",
-        _ => "buzz"
+        0 => "buzz",
+        _ => "fizz"
     }
 }
 
@@ -65,8 +65,8 @@ pub fn get_point_quadrant(x:i32, y:i32) -> Quadrant{
     let point = (x, y);
 
     match point {
-        (x, y) if x < 0 && y > 0 => Quadrant::One,
-        (x, y) if x > 0 && y > 0 => Quadrant::Two,
+        (x, y) if x > 0 && y > 0 => Quadrant::One,
+        (x, y) if x < 0 && y > 0 => Quadrant::Two,
         (x, y) if x < 0 && y < 0 => Quadrant::Three,
         (x, y) if x > 0 && y < 0 => Quadrant::Four,
         _ => Quadrant::Origin,
@@ -84,7 +84,7 @@ pub fn add_numbers_within_text(number_text: &str) -> u32 {
     for c in number_text.chars()
         .filter(|s| s.is_numeric())
             {
-                x += c.to_digit(2).unwrap_or(0);
+                x += c.to_digit(10).unwrap_or(0);
             }
 
     x
@@ -98,7 +98,7 @@ pub fn try_divide_returns_option_type(numerator: i32, denominator: i32) -> Optio
     if denominator != 0 {
         Some(numerator / denominator)
     } else {
-        Some(0)
+        None
     }
 }
 
@@ -115,7 +115,7 @@ pub fn try_divide_returns_error_type(numerator: i32, denominator: i32) -> Result
     if denominator != 0 {
         Ok(numerator / denominator)
     } else {
-        Ok(0)
+        Err(DivError::DivisionByZero)
     }
 }
 
@@ -128,7 +128,7 @@ use std::io::{self, Read};
 pub fn read_name_from_file() -> Result<String, io::Error> {
     let mut name = String::new();
 
-    File::open("tests/File read test.txt")?.read_to_string(&mut name)?;
+    File::open("tests/File_read_test.txt")?.read_to_string(&mut name)?;
 
     Ok(name)
 }
@@ -137,47 +137,30 @@ pub fn read_name_from_file() -> Result<String, io::Error> {
 // Get the area of a circle.
 
 #[allow(dead_code)]
-pub struct Shape {
-    name: String,
-    area: f64,
-}
-
-#[allow(dead_code)]
 pub struct Circle {
-    shape: Shape,
+    
     radius: f64,
 }
 
-#[allow(dead_code)]
-impl Shape {
-    fn new(name: String, area: f64) -> Self {
-        Self { name, area }
-    }
 
-    fn get_area(&self) -> f64 {
-        self.area
-    }
-}
 
 #[allow(dead_code)]
 impl Circle {
-    fn new(name: String, radius: f64) -> Self {
+   pub fn new(radius: f64) -> Self {
         Self {
-            shape: Shape::new(name, 0.0), // poor design, but: default shape area to 0.0
-                                                // we'll just use the calculation for area in Circles Impl
-            radius,
+            radius
         }
     }
 
-    fn get_area(&self) -> f64{
+    pub fn get_area(&self) -> f64{
         std::f64::consts::PI * self.radius * self.radius
     }
 }
 
 pub fn get_circle_area(radius: f64) -> f64{
 
-    let circle = Circle::new(String::from("Circle"), radius);
+    let circle = Circle::new(radius);
 
-    circle.shape.get_area() 
+    circle.get_area() 
 
 }
